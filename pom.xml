@@ -58,7 +58,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>org.esmerilprogramming.g_o_l_d.Main2</mainClass>
+              <mainClass>org.esmerilprogramming.g_o_l_d.Main</mainClass>
             </manifest>
             <manifestEntries>
               <Class-Path>.</Class-Path>
