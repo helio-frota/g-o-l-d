@@ -20,7 +20,7 @@ public class Gold implements Command<CommandInvocation> {
     private Shell shell;
     private ExecutorService executorService;
     private GoldRunner runner;
-
+    
     @Override
     public CommandResult execute(CommandInvocation commandInvocation) throws IOException, InterruptedException {
 
@@ -30,8 +30,9 @@ public class Gold implements Command<CommandInvocation> {
         shell.out().print(ANSI.hideCursor());
         shell.enableAlternateBuffer();
         shell.out().flush();
+        
         startGame(shell);
-        processOperation();
+        processInput();
 
         return CommandResult.SUCCESS;
     }
@@ -40,27 +41,30 @@ public class Gold implements Command<CommandInvocation> {
         runner = new GoldRunner(shell);
         executorService = Executors.newSingleThreadExecutor();
         executorService.execute(runner);
+        TimerRunner runner = new TimerRunner(shell);
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(runner);
     }
 
-    public void processOperation() throws IOException, InterruptedException {
+    public void processInput() throws IOException, InterruptedException {
         try {
             while (true) {
                 CommandOperation commandOperation = commandInvocation.getInput();
                 if (commandOperation.getInputKey() == Key.UP) {
-                    System.out.println("UP");
+                    runner.countMove();
                 } else if (commandOperation.getInputKey() == Key.DOWN) {
-                    System.out.println("DOWN");
+                    runner.countMove();
                 } else if (commandOperation.getInputKey() == Key.LEFT) {
-                    System.out.println("LEFT");
+                    runner.countMove();
                 } else if (commandOperation.getInputKey() == Key.RIGHT) {
-                    System.out.println("RIGHT");
+                    runner.countMove();
                 } else if (commandOperation.getInputKey() == Key.ESC || commandOperation.getInputKey() == Key.q) {
                     stop();
                 }
             }
         }
-        catch (InterruptedException ie) {
-            throw ie;
+        catch (InterruptedException e) {
+            throw e;
         }
     }
     
