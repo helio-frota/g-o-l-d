@@ -13,6 +13,8 @@
  */
 package org.esmerilprogramming.g_o_l_d;
 
+import java.util.Random;
+
 import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
 import org.jboss.aesh.graphics.Graphics;
 import org.jboss.aesh.graphics.GraphicsConfiguration;
@@ -24,6 +26,11 @@ import org.jboss.aesh.terminal.TerminalColor;
  * @author <a href="mailto:00hf11@gmail.com">Helio Frota</a>
  */
 public class GoldRunner implements Runnable {
+
+    GoldItem g1 = new GoldItem(14, 8);
+    GoldItem g2 = new GoldItem(66, 8);
+    GoldItem g3 = new GoldItem(14, 28);
+    GoldItem g4 = new GoldItem(66, 18);
 
     private int maxX;
     private int maxY;
@@ -37,8 +44,7 @@ public class GoldRunner implements Runnable {
     private int spriteX;
     private int spriteY;
 
-    private int goldX;
-    private int goldY;
+    private int lastGoldItem;
 
     static final TerminalColor WORLD_COLOR = new TerminalColor(Color.BLUE, Color.DEFAULT);
     private TerminalColor goldColor;
@@ -71,29 +77,93 @@ public class GoldRunner implements Runnable {
         graphics.drawString("STEPS:", 13, 1);
         graphics.drawString("TIME REMAINING:", maxX - 17, 1);
         graphics.drawLine(0, 2, maxX, 2);
-        graphics.drawRect(8, 5, 14, 5);
-        graphics.drawRect(60, 5, 14, 5);
-        graphics.drawRect(8, 15, 14, 5);
-        graphics.drawRect(60, 15, 14, 5);
-        graphics.setColor(goldColor);
-        graphics.fillRect(14, 8, 2, 1);
-        graphics.fillRect(66, 8, 2, 1);
-        graphics.fillRect(14, 18, 2, 1);
-        graphics.fillRect(66, 18, 2, 1);
-        graphics.setColor(WORLD_COLOR);
+        drawPlaces();
+        randomGold();
         spriteX = maxX / 2 - 2;
         spriteY = maxY / 2;
         graphics.drawString(SPRITE, spriteX, spriteY);
     }
 
-    public void updateScore() {
-        if (spriteX == goldX && spriteY == goldY) {
-            graphics.drawString("" + ++score, 7, 1);
+    private void randomGold() {
 
+        Random rand = new Random();
+        int raffle = rand.nextInt(4) + 1;
+        if (raffle == 1 && raffle != lastGoldItem) {
+            applyRaffle(g1, 1);
+        }
+        else if (raffle == 2 && raffle != lastGoldItem) {
+            applyRaffle(g2, 2);
+        }
+        else if (raffle == 3 && raffle != lastGoldItem) {
+            applyRaffle(g3, 3);
+        }
+        else if (raffle == 4 && raffle != lastGoldItem) {
+            applyRaffle(g4, 4);
+        }
+        else {
+            randomGold();
         }
     }
 
-    public void countMove() {
+    private void checkGetGold() {
+
+        GoldItem currentGold;
+        if (lastGoldItem == 1) {
+            currentGold = g1;
+        }
+        else if (lastGoldItem == 2) {
+            currentGold = g2;
+        }
+        else if (lastGoldItem == 3) {
+            currentGold = g3;
+        }
+        else {
+            currentGold = g4;
+        }
+
+        if (spriteX == currentGold.getX() && spriteY == currentGold.getY()) {
+            graphics.drawString("" + ++score, 7, 1);
+            drawPlaces();
+            randomGold();
+        }
+    }
+
+    private void applyRaffle(GoldItem g, int lastGoldItemValue) {
+        graphics.setColor(goldColor);
+        graphics.fillRect(g.getX(), g.getY(), GoldItem.WIDTH, GoldItem.HEIGHT);
+        lastGoldItem = lastGoldItemValue;
+        graphics.setColor(WORLD_COLOR);
+    }
+
+    class GoldItem {
+
+        static final int HEIGHT = 1;
+        static final int WIDTH = 1;
+        private int x;
+        private int y;
+
+        public GoldItem(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+    }
+
+    private void drawPlaces() {
+        graphics.drawRect(8, 5, 14, 5);
+        graphics.drawRect(60, 5, 14, 5);
+        graphics.drawRect(8, 15, 14, 5);
+        graphics.drawRect(60, 15, 14, 5);
+    }
+
+    private void countMove() {
         graphics.drawString("" + ++steps, 19, 1);
     }
 
@@ -102,6 +172,8 @@ public class GoldRunner implements Runnable {
             int pathClear = spriteY;
             graphics.drawString(SPRITE, spriteX, --spriteY);
             graphics.drawString(" ", spriteX, pathClear);
+            countMove();
+            checkGetGold();
         }
     }
 
@@ -110,6 +182,8 @@ public class GoldRunner implements Runnable {
             int pathClear = spriteY;
             graphics.drawString(SPRITE, spriteX, ++spriteY);
             graphics.drawString(" ", spriteX, pathClear);
+            countMove();
+            checkGetGold();
         }
     }
 
@@ -118,6 +192,8 @@ public class GoldRunner implements Runnable {
             int pathClear = spriteX;
             graphics.drawString(SPRITE, --spriteX, spriteY);
             graphics.drawString(" ", pathClear, spriteY);
+            countMove();
+            checkGetGold();
         }
     }
 
@@ -126,6 +202,8 @@ public class GoldRunner implements Runnable {
             int pathClear = spriteX;
             graphics.drawString(SPRITE, ++spriteX, spriteY);
             graphics.drawString(" ", pathClear, spriteY);
+            countMove();
+            checkGetGold();
         }
     }
 
