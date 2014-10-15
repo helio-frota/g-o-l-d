@@ -34,9 +34,11 @@ public class Timer implements Runnable {
         while (true) {
             if (timer > 0) {
                 if (timer >= 10) {
+                    graphics.setColor(GoldRunner.WORLD_COLOR);
                     graphics.drawString("" + timer--, maxX - 2, 1);
                 }
                 else {
+                    graphics.setColor(GoldRunner.WORLD_COLOR);
                     graphics.drawString(" " + timer--, maxX - 2, 1);
                 }
                 pause();

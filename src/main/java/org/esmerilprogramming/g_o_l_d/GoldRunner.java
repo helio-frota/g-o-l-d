@@ -29,20 +29,30 @@ public class GoldRunner implements Runnable {
     private int maxY;
 
     private int score;
-    
+    private int steps;
+
     private final Shell shell;
     private Graphics graphics;
 
-    private TerminalColor tc;
+    private int spriteX;
+    private int spriteY;
+
+    private int goldX;
+    private int goldY;
+
+    static final TerminalColor WORLD_COLOR = new TerminalColor(Color.BLUE, Color.DEFAULT);
+    private TerminalColor goldColor;
+
+    private static final String SPRITE = "X";
 
     public GoldRunner(Shell shell) {
         this.shell = shell;
 
-        tc = new TerminalColor(Color.BLUE, Color.DEFAULT);
+        goldColor = new TerminalColor(Color.DEFAULT, Color.YELLOW);
 
         GraphicsConfiguration gc = new AeshGraphicsConfiguration(this.shell);
         graphics = gc.getGraphics();
-        graphics.setColor(tc);
+        graphics.setColor(WORLD_COLOR);
 
         maxX = shell.getSize().getWidth();
         maxY = shell.getSize().getHeight();
@@ -61,14 +71,66 @@ public class GoldRunner implements Runnable {
         graphics.drawString("STEPS:", 13, 1);
         graphics.drawString("TIME REMAINING:", maxX - 17, 1);
         graphics.drawLine(0, 2, maxX, 2);
+        graphics.drawRect(8, 5, 14, 5);
+        graphics.drawRect(60, 5, 14, 5);
+        graphics.drawRect(8, 15, 14, 5);
+        graphics.drawRect(60, 15, 14, 5);
+        graphics.setColor(goldColor);
+        graphics.fillRect(14, 8, 2, 1);
+        graphics.fillRect(66, 8, 2, 1);
+        graphics.fillRect(14, 18, 2, 1);
+        graphics.fillRect(66, 18, 2, 1);
+        graphics.setColor(WORLD_COLOR);
+        spriteX = maxX / 2 - 2;
+        spriteY = maxY / 2;
+        graphics.drawString(SPRITE, spriteX, spriteY);
     }
 
     public void updateScore() {
-        graphics.drawString("" + score++, 7, 1);
+        if (spriteX == goldX && spriteY == goldY) {
+            graphics.drawString("" + ++score, 7, 1);
+
+        }
     }
 
     public void countMove() {
-        graphics.drawString("" + score++, 19, 1);
+        graphics.drawString("" + ++steps, 19, 1);
+    }
+
+    public void moveUp() throws InterruptedException {
+        if (spriteY != 3) {
+            int pathClear = spriteY;
+            graphics.drawString(SPRITE, spriteX, --spriteY);
+            graphics.drawString(" ", spriteX, pathClear);
+        }
+    }
+
+    public void moveDown() throws InterruptedException {
+        if (spriteY != 23) {
+            int pathClear = spriteY;
+            graphics.drawString(SPRITE, spriteX, ++spriteY);
+            graphics.drawString(" ", spriteX, pathClear);
+        }
+    }
+
+    public void moveLeft() throws InterruptedException {
+        if (spriteX != 2) {
+            int pathClear = spriteX;
+            graphics.drawString(SPRITE, --spriteX, spriteY);
+            graphics.drawString(" ", pathClear, spriteY);
+        }
+    }
+
+    public void moveRight() throws InterruptedException {
+        if (spriteX != 79) {
+            int pathClear = spriteX;
+            graphics.drawString(SPRITE, ++spriteX, spriteY);
+            graphics.drawString(" ", pathClear, spriteY);
+        }
+    }
+
+    public void cleanup() {
+        graphics.cleanup();
     }
 
 }
