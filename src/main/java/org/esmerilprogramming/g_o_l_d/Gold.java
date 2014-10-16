@@ -14,7 +14,6 @@
 package org.esmerilprogramming.g_o_l_d;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

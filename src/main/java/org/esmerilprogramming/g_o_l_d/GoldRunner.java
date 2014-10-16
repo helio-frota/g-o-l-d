@@ -15,6 +15,9 @@ package org.esmerilprogramming.g_o_l_d;
 
 import java.util.Random;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
 import org.jboss.aesh.graphics.Graphics;
 import org.jboss.aesh.graphics.GraphicsConfiguration;
@@ -123,8 +126,20 @@ public class GoldRunner implements Runnable {
 
         if (spriteX == currentGold.getX() && spriteY == currentGold.getY()) {
             graphics.drawString("" + ++score, 7, 1);
+            playGold();
             drawPlaces();
             randomGold();
+        }
+    }
+
+    private void playGold() {
+        try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("209578__zott820__cash-register-purchase.wav")));
+            clip.start();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
