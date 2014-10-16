@@ -14,8 +14,12 @@
 package org.esmerilprogramming.g_o_l_d;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 import org.jboss.aesh.cl.CommandDefinition;
 import org.jboss.aesh.console.command.Command;
@@ -36,7 +40,7 @@ public class Gold implements Command<CommandInvocation> {
     private Shell shell;
     private ExecutorService executorService;
     private GoldRunner runner;
-    
+
     @Override
     public CommandResult execute(CommandInvocation commandInvocation) throws IOException, InterruptedException {
 
@@ -46,7 +50,7 @@ public class Gold implements Command<CommandInvocation> {
         shell.out().print(ANSI.hideCursor());
         shell.enableAlternateBuffer();
         shell.out().flush();
-        
+
         startGame(shell);
         processInput();
 
@@ -57,6 +61,7 @@ public class Gold implements Command<CommandInvocation> {
         runner = new GoldRunner(shell);
         executorService = Executors.newSingleThreadExecutor();
         executorService.execute(runner);
+        playMetal();
     }
 
     public void processInput() throws IOException, InterruptedException {
@@ -65,13 +70,17 @@ public class Gold implements Command<CommandInvocation> {
                 CommandOperation commandOperation = commandInvocation.getInput();
                 if (commandOperation.getInputKey() == Key.UP) {
                     runner.moveUp();
-                } else if (commandOperation.getInputKey() == Key.DOWN) {
+                }
+                else if (commandOperation.getInputKey() == Key.DOWN) {
                     runner.moveDown();
-                } else if (commandOperation.getInputKey() == Key.LEFT) {
+                }
+                else if (commandOperation.getInputKey() == Key.LEFT) {
                     runner.moveLeft();
-                } else if (commandOperation.getInputKey() == Key.RIGHT) {
+                }
+                else if (commandOperation.getInputKey() == Key.RIGHT) {
                     runner.moveRight();
-                } else if (commandOperation.getInputKey() == Key.ESC || commandOperation.getInputKey() == Key.q) {
+                }
+                else if (commandOperation.getInputKey() == Key.ESC || commandOperation.getInputKey() == Key.q) {
                     runner.cleanup();
                     stop();
                 }
@@ -81,9 +90,9 @@ public class Gold implements Command<CommandInvocation> {
             throw e;
         }
     }
-    
+
     private void stop() throws IOException {
-        if(executorService != null) {
+        if (executorService != null) {
             executorService.shutdown();
         }
 
@@ -92,6 +101,18 @@ public class Gold implements Command<CommandInvocation> {
         shell.out().print(ANSI.showCursor());
         shell.enableMainBuffer();
         shell.out().flush();
+    }
+
+    private void playMetal() {
+        try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("173248__zagi2__heavy-loop.wav")));
+            clip.start();
+            clip.loop(3);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
