@@ -8,9 +8,7 @@ A simple java game
 ![Alt g-o-l-d](https://raw.githubusercontent.com/EsmerilProgramming/g-o-l-d/master/g_o_l_d.png)
 
 
+* clone the projet
 
-Clone the projet
+* type mvn exec:java
 
-type mvn exec:java
-
-type gold and play
