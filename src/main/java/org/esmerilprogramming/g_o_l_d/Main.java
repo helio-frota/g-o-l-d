@@ -15,6 +15,7 @@ package org.esmerilprogramming.g_o_l_d;
 
 import org.jboss.aesh.console.AeshConsole;
 import org.jboss.aesh.console.AeshConsoleBuilder;
+import org.jboss.aesh.console.AeshConsoleImpl;
 import org.jboss.aesh.console.command.registry.AeshCommandRegistryBuilder;
 
 /**
@@ -32,5 +33,7 @@ public class Main {
         AeshConsole aeshConsole = aeshConsoleBuilder.create();
 
         aeshConsole.start();
+        ((AeshConsoleImpl) aeshConsole).execute("gold");
+        ((AeshConsoleImpl) aeshConsole).execute("\n");
     }
 }
