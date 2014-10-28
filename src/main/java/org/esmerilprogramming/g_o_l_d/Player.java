@@ -26,7 +26,7 @@ public class Player {
     }
     
     public int increaseSteps() {
-        return ++score;
+        return ++steps;
     }
 
 }
