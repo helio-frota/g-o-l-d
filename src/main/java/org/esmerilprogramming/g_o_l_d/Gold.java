@@ -67,20 +67,20 @@ public class Gold implements Command<CommandInvocation> {
         try {
             while (true) {
                 CommandOperation commandOperation = commandInvocation.getInput();
-                if (commandOperation.getInputKey() == Key.UP) {
+                Key key = commandOperation.getInputKey();
+                if (key == Key.UP) {
                     runner.moveUp();
                 }
-                else if (commandOperation.getInputKey() == Key.DOWN) {
+                else if (key == Key.DOWN) {
                     runner.moveDown();
                 }
-                else if (commandOperation.getInputKey() == Key.LEFT) {
+                else if (key == Key.LEFT) {
                     runner.moveLeft();
                 }
-                else if (commandOperation.getInputKey() == Key.RIGHT) {
+                else if (key == Key.RIGHT) {
                     runner.moveRight();
                 }
-                else if (commandOperation.getInputKey() == Key.ESC || commandOperation.getInputKey() == Key.q) {
-                    runner.cleanup();
+                else if (key == Key.ESC || key == Key.q) {
                     stop();
                 }
             }
@@ -91,6 +91,7 @@ public class Gold implements Command<CommandInvocation> {
     }
 
     private void stop() throws IOException {
+        runner.cleanup();
         if (executorService != null) {
             executorService.shutdown();
         }

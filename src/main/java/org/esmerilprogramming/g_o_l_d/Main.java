@@ -22,7 +22,7 @@ import org.jboss.aesh.console.command.registry.AeshCommandRegistryBuilder;
  * @author <a href="mailto:00hf11@gmail.com">Helio Frota</a>
  */
 public class Main {
-    
+
     public static void main(String[] args) {
 
         AeshCommandRegistryBuilder aeshCommandRegistryBuilder = new AeshCommandRegistryBuilder();

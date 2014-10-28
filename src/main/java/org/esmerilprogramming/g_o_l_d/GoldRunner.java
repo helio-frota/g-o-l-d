@@ -38,10 +38,9 @@ public class GoldRunner implements Runnable {
     private int maxX;
     private int maxY;
 
-    private int score;
-    private int steps;
-
-    private final Shell shell;
+    private Player player;
+    
+    private Shell shell;
     private Graphics graphics;
 
     private int spriteX;
@@ -125,7 +124,7 @@ public class GoldRunner implements Runnable {
         }
 
         if (spriteX == currentGold.getX() && spriteY == currentGold.getY()) {
-            graphics.drawString("" + ++score, 7, 1);
+            graphics.drawString("" + player.increaseScore(), 7, 1);
             playGold();
             drawPlaces();
             randomGold();
@@ -179,7 +178,7 @@ public class GoldRunner implements Runnable {
     }
 
     private void countMove() {
-        graphics.drawString("" + ++steps, 19, 1);
+        graphics.drawString("" + player.increaseSteps(), 19, 1);
     }
 
     public void moveUp() throws InterruptedException {
