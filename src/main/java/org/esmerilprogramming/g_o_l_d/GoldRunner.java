@@ -65,6 +65,7 @@ public class GoldRunner implements Runnable {
         maxX = shell.getSize().getWidth();
         maxY = shell.getSize().getHeight();
 
+        player = new Player();
         drawWorld();
         new Thread(new Timer(graphics, maxX)).start();
     }

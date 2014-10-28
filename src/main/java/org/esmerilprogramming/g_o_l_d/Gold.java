@@ -67,20 +67,19 @@ public class Gold implements Command<CommandInvocation> {
         try {
             while (true) {
                 CommandOperation commandOperation = commandInvocation.getInput();
-                Key key = commandOperation.getInputKey();
-                if (key == Key.UP) {
+                if (commandOperation.getInputKey() == Key.UP) {
                     runner.moveUp();
                 }
-                else if (key == Key.DOWN) {
+                else if (commandOperation.getInputKey() == Key.DOWN) {
                     runner.moveDown();
                 }
-                else if (key == Key.LEFT) {
+                else if (commandOperation.getInputKey() == Key.LEFT) {
                     runner.moveLeft();
                 }
-                else if (key == Key.RIGHT) {
+                else if (commandOperation.getInputKey() == Key.RIGHT) {
                     runner.moveRight();
                 }
-                else if (key == Key.ESC || key == Key.q) {
+                else if (commandOperation.getInputKey() == Key.ESC || commandOperation.getInputKey() == Key.q) {
                     stop();
                 }
             }
