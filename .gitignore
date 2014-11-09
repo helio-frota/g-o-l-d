@@ -6,6 +6,12 @@ target
 *.ipr
 *.iws
 .idea
+build
+.gradle
+out
+*.swp
+classes
+/bin/
 *~
 .*
 !/.gitignore
