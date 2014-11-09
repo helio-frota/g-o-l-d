@@ -1,7 +1,6 @@
 g-o-l-d
 =======
 
-> ( Getting gold while getting old... )
 
 A simple java game
 
