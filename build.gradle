@@ -1,0 +1,28 @@
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "eclipse"
+apply plugin: "maven"
+apply plugin: "application"
+
+group = "org.esmerilprogramming"
+version = "0.1"
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+jar {
+    manifest {
+        attributes "Implementation-Title": "G-o-l-d", "Implementation-Version": version, "Main-Class": "Main"
+    }
+}
+
+mainClassName = "org.esmerilprogramming.g_o_l_d.Main"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jboss.aesh:aesh:0.56"
+    compile "org.jboss.aesh:aesh-extensions:0.56"
+}
+
