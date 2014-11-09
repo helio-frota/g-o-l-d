@@ -18,6 +18,8 @@ import java.util.Random;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import org.esmerilprogramming.g_o_l_d.sprite.Gold;
+import org.esmerilprogramming.g_o_l_d.sprite.Player;
 import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
 import org.jboss.aesh.graphics.Graphics;
 import org.jboss.aesh.graphics.GraphicsConfiguration;
@@ -30,16 +32,16 @@ import org.jboss.aesh.terminal.TerminalColor;
  */
 public class GoldRunner implements Runnable {
 
-    GoldItem g1 = new GoldItem(14, 8);
-    GoldItem g2 = new GoldItem(66, 8);
-    GoldItem g3 = new GoldItem(14, 28);
-    GoldItem g4 = new GoldItem(66, 18);
+    private Gold g1 = new Gold(14, 8);
+    private Gold g2 = new Gold(66, 8);
+    private Gold g3 = new Gold(14, 28);
+    private Gold g4 = new Gold(66, 18);
 
     private int maxX;
     private int maxY;
 
     private Player player;
-    
+
     private Shell shell;
     private Graphics graphics;
 
@@ -110,7 +112,7 @@ public class GoldRunner implements Runnable {
 
     private void checkGetGold() {
 
-        GoldItem currentGold;
+        Gold currentGold;
         if (lastGoldItem == 1) {
             currentGold = g1;
         }
@@ -143,32 +145,11 @@ public class GoldRunner implements Runnable {
         }
     }
 
-    private void applyRaffle(GoldItem g, int lastGoldItemValue) {
+    private void applyRaffle(Gold g, int lastGoldItemValue) {
         graphics.setColor(goldColor);
-        graphics.fillRect(g.getX(), g.getY(), GoldItem.WIDTH, GoldItem.HEIGHT);
+        graphics.fillRect(g.getX(), g.getY(), Gold.WIDTH, Gold.HEIGHT);
         lastGoldItem = lastGoldItemValue;
         graphics.setColor(WORLD_COLOR);
-    }
-
-    class GoldItem {
-
-        static final int HEIGHT = 1;
-        static final int WIDTH = 1;
-        private int x;
-        private int y;
-
-        public GoldItem(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
     }
 
     private void drawPlaces() {

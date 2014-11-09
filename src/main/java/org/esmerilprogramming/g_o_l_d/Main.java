@@ -26,7 +26,7 @@ public class Main {
     public static void main(String[] args) {
 
         AeshCommandRegistryBuilder aeshCommandRegistryBuilder = new AeshCommandRegistryBuilder();
-        aeshCommandRegistryBuilder.command(Gold.class);
+        aeshCommandRegistryBuilder.command(GoldCommand.class);
 
         AeshConsoleBuilder aeshConsoleBuilder = new AeshConsoleBuilder();
         aeshConsoleBuilder.commandRegistry(aeshCommandRegistryBuilder.create());
