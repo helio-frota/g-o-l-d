@@ -36,7 +36,11 @@ public class GoldGraphics {
 
     public void drawReadyScreen(Shell shell) {
         graphics.setColor(WORLD_COLOR);
-        graphics.drawString("Ready ? (y/n)", (shell.getSize().getWidth() / 2) - 2, shell.getSize().getHeight() / 2);
+        int middleScreenWidth = (shell.getSize().getWidth() / 2) - 2;
+        int middleScreenHeight = shell.getSize().getHeight() / 2;
+        graphics.drawString("Use keyboard UP, DOWN, LEFT, RIGHT.", middleScreenWidth, middleScreenHeight);
+        graphics.drawString("While playing, press 'q' or 'ESC' to quit.", middleScreenWidth, middleScreenHeight + 2);
+        graphics.drawString("Ready ? (y/n)", middleScreenWidth, middleScreenHeight + 4);
     }
     
     public void drawScoreScreen(Shell shell) {

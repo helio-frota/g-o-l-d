@@ -25,8 +25,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Sounds {
 
-    private static final String MUSIC = "173248__zagi2__heavy-loop.wav";
-    private static final String SOUND = "209578__zott820__cash-register-purchase.wav";
+    private static final String MUSIC = "music_gold.wav";
+    private static final String SOUND = "sound_gold.wav";
 
     private static Clip music = null;
     
