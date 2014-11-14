@@ -45,7 +45,9 @@ public class GoldGraphics {
     
     public void drawScoreScreen(Shell shell) {
         graphics.setColor(WORLD_COLOR);
-        graphics.drawString("Best Score: 9999999999", (shell.getSize().getWidth() / 2) - 2, shell.getSize().getHeight() / 2);
+        int middleScreenWidth = (shell.getSize().getWidth() / 2) - 2;
+        int middleScreenHeight = shell.getSize().getHeight() / 2;
+        graphics.drawString("Best score: 9999.", middleScreenWidth, middleScreenHeight);
     }
     
     public void drawWorld(int screenWidth, int screenHeight) {
