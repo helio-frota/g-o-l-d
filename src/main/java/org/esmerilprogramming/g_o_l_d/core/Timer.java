@@ -21,7 +21,7 @@ import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
 public class Timer implements Runnable {
 
     private int maxX;
-    public static int timer = 30;
+    public static int timer = 35;
     private GoldGraphics goldGraphics;
 
     public Timer(GoldGraphics goldGraphics, int maxX) {
