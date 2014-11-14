@@ -22,8 +22,6 @@ import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
 import org.esmerilprogramming.g_o_l_d.sounds.Sounds;
 import org.esmerilprogramming.g_o_l_d.sprite.Gold;
 import org.esmerilprogramming.g_o_l_d.sprite.Player;
-import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
-import org.jboss.aesh.graphics.GraphicsConfiguration;
 import org.jboss.aesh.terminal.Shell;
 import org.jboss.aesh.util.ANSI;
 
@@ -45,52 +43,51 @@ public class GoldRunner implements Runnable {
 
     private GoldGraphics goldGraphics;
 
-    private int lastGoldItem;
+    private int pastGold;
 
     public static boolean running = true;
 
-    public GoldRunner(Shell shell) {
+    public GoldRunner(Shell shell, GoldGraphics goldGraphics) {
         this.shell = shell;
 
-        GraphicsConfiguration gc = new AeshGraphicsConfiguration(this.shell);
-        goldGraphics = new GoldGraphics(gc.getGraphics());
-        goldGraphics.drawWorld(shell.getSize().getWidth(), shell.getSize().getHeight());
+        this.goldGraphics = goldGraphics;
+        this.goldGraphics.drawWorld(shell.getSize().getWidth(), shell.getSize().getHeight());
 
         randomGold();
 
         player = new Player((shell.getSize().getWidth() / 2) - 2, shell.getSize().getHeight() / 2);
 
-        goldGraphics.drawPlayer(player);
+        this.goldGraphics.drawPlayer(player);
 
         Sounds.playMusic();
 
         timerService = Executors.newSingleThreadExecutor();
-        timerService.execute(new Timer(goldGraphics, shell.getSize().getWidth()));
+        timerService.execute(new Timer(this.goldGraphics, shell.getSize().getWidth()));
     }
 
     @Override
     public void run() {
 
     }
-
+    
     private void randomGold() {
 
         int raffle = new Random().nextInt(4) + 1;
-        if (raffle == 1 && raffle != lastGoldItem) {
+        if (raffle == 1 && raffle != pastGold) {
             goldGraphics.repaintGold(g1);
-            lastGoldItem = 1;
+            pastGold = 1;
         }
-        else if (raffle == 2 && raffle != lastGoldItem) {
+        else if (raffle == 2 && raffle != pastGold) {
             goldGraphics.repaintGold(g2);
-            lastGoldItem = 2;
+            pastGold = 2;
         }
-        else if (raffle == 3 && raffle != lastGoldItem) {
+        else if (raffle == 3 && raffle != pastGold) {
             goldGraphics.repaintGold(g3);
-            lastGoldItem = 3;
+            pastGold = 3;
         }
-        else if (raffle == 4 && raffle != lastGoldItem) {
+        else if (raffle == 4 && raffle != pastGold) {
             goldGraphics.repaintGold(g4);
-            lastGoldItem = 4;
+            pastGold = 4;
         }
         else {
             randomGold();
@@ -100,13 +97,13 @@ public class GoldRunner implements Runnable {
     private void checkGetGold() {
 
         Gold currentGold;
-        if (lastGoldItem == 1) {
+        if (pastGold == 1) {
             currentGold = g1;
         }
-        else if (lastGoldItem == 2) {
+        else if (pastGold == 2) {
             currentGold = g2;
         }
-        else if (lastGoldItem == 3) {
+        else if (pastGold == 3) {
             currentGold = g3;
         }
         else {
@@ -149,7 +146,7 @@ public class GoldRunner implements Runnable {
         }
     }
 
-    public void stop(ExecutorService executorService) throws IOException {
+    public void gameOver(ExecutorService executorService) throws IOException {
         
         if (this.timerService != null) {
             this.timerService.shutdown();
