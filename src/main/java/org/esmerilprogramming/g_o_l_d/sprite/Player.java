@@ -30,6 +30,10 @@ public class Player {
         this.positionX = x;
         this.positionY = y;
     }
+    
+    public int getScore() {
+        return score;
+    }
 
     public int increaseScore() {
         return ++score;

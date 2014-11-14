@@ -147,6 +147,7 @@ public class GoldRunner implements Runnable {
     }
 
     public void gameOver(ExecutorService executorService) throws IOException {
+        
         Timer.timer = 0;
         Sounds.stopMusic();
         if (this.timerService != null) {
@@ -157,13 +158,13 @@ public class GoldRunner implements Runnable {
         shell.clear();
         shell.out().print(ANSI.restoreCursor());
         shell.out().print(ANSI.showCursor());
-        shell.enableMainBuffer();
-        shell.out().flush();
-
+        
         if (executorService != null) {
             executorService.shutdown();
         }
 
+        shell.enableMainBuffer();
+        shell.out().flush();
     }
 
 }
