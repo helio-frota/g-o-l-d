@@ -25,51 +25,83 @@ import org.jboss.aesh.terminal.TerminalColor;
 public class GoldGraphics {
 
     private Graphics graphics;
-    
+
     public static final TerminalColor WORLD_COLOR = new TerminalColor(Color.BLUE, Color.DEFAULT);
     private static final TerminalColor GOLD_COLOR = new TerminalColor(Color.DEFAULT, Color.YELLOW);
-    
+
     public GoldGraphics(Graphics graphics) {
         this.graphics = graphics;
     }
-    
+
     public void drawWorld(int screenWidth, int screenHeight) {
         graphics.setColor(WORLD_COLOR);
         graphics.drawString("SCORE:", 0, 1);
         graphics.drawString("STEPS:", 13, 1);
         graphics.drawString("TIME REMAINING:", screenWidth - 17, 1);
         graphics.drawLine(0, 2, screenWidth, 2);
-        
+
         drawGoldPlaces();
     }
-    
+
     public void drawPlayer(Player player) {
         graphics.drawString(Player.CHARACTER, player.getPositionX(), player.getPositionY());
     }
-    
+
     public void drawGoldPlaces() {
         graphics.drawRect(8, 5, 14, 5);
         graphics.drawRect(60, 5, 14, 5);
         graphics.drawRect(8, 15, 14, 5);
         graphics.drawRect(60, 15, 14, 5);
     }
+
+    public void drawMoveRight(Player player) {
+        int pathClear = player.getPositionX();
+        graphics.drawString(Player.CHARACTER, player.increasePositionX(), player.getPositionY());
+        graphics.drawString(" ", pathClear, player.getPositionY());
+        graphics.drawString("" + player.increaseSteps(), 19, 1);
+    }
+
+    public void drawMoveLeft(Player player) {
+        int pathClear = player.getPositionX();
+        graphics.drawString(Player.CHARACTER, player.decreasePositionX(), player.getPositionY());
+        graphics.drawString(" ", pathClear, player.getPositionY());
+        graphics.drawString("" + player.increaseSteps(), 19, 1);
+    }
+
+    public void drawMoveDown(Player player) {
+        int pathClear = player.getPositionY();
+        graphics.drawString(Player.CHARACTER, player.getPositionX(), player.increasePositionY());
+        graphics.drawString(" ", player.getPositionX(), pathClear);
+        graphics.drawString("" + player.increaseSteps(), 19, 1);
+    }
     
+    public void drawMoveUp(Player player) {
+        int pathClear = player.getPositionY();
+        graphics.drawString(Player.CHARACTER, player.getPositionX(), player.decreasePositionY());
+        graphics.drawString(" ", player.getPositionX(), pathClear);
+        graphics.drawString("" + player.increaseSteps(), 19, 1);
+    }
+
     public void repaintGold(Gold g) {
         paintGoldColor();
         graphics.fillRect(g.getX(), g.getY(), Gold.WIDTH, Gold.HEIGHT);
         paintWorldColor();
     }
-    
+
     public void paintWorldColor() {
-        graphics.setColor(WORLD_COLOR);        
+        graphics.setColor(WORLD_COLOR);
     }
-    
+
     public void paintGoldColor() {
-        graphics.setColor(GOLD_COLOR);        
+        graphics.setColor(GOLD_COLOR);
     }
-    
+
     public Graphics getGraphics() {
         return graphics;
     }
-    
+
+    public void cleanup() {
+        graphics.cleanup();
+    }
+
 }
