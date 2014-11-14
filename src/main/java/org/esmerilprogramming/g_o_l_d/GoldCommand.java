@@ -28,6 +28,7 @@ import org.jboss.aesh.console.command.invocation.CommandInvocation;
 import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
 import org.jboss.aesh.graphics.GraphicsConfiguration;
 import org.jboss.aesh.terminal.Key;
+import org.jboss.aesh.terminal.Shell;
 import org.jboss.aesh.util.ANSI;
 
 /**
@@ -41,54 +42,59 @@ public class GoldCommand implements Command<CommandInvocation> {
     @Override
     public CommandResult execute(CommandInvocation commandInvocation) throws IOException, InterruptedException {
 
-        commandInvocation.getShell().out().print(ANSI.saveCursor());
-        commandInvocation.getShell().out().print(ANSI.hideCursor());
-        commandInvocation.getShell().enableAlternateBuffer();
-        commandInvocation.getShell().out().flush();
+        Shell shell = commandInvocation.getShell();
+        gameModeOn(shell);
 
-        GraphicsConfiguration gc = new AeshGraphicsConfiguration(commandInvocation.getShell());
+        GraphicsConfiguration gc = new AeshGraphicsConfiguration(shell);
         GoldGraphics goldGraphics = new GoldGraphics(gc.getGraphics());
-
-        goldGraphics.drawReadyScreen(commandInvocation.getShell());
+        goldGraphics.drawReadyScreen(shell);
 
         CommandOperation commandOperation = commandInvocation.getInput();
         if (commandOperation.getInputKey() == Key.y) {
-            
-            goldGraphics.cleanup();
-            commandInvocation.getShell().clear();
-            commandInvocation.getShell().out().print(ANSI.saveCursor());
-            commandInvocation.getShell().out().print(ANSI.hideCursor());
-            commandInvocation.getShell().out().flush();
-            
-            GoldRunner gr = new GoldRunner(commandInvocation.getShell(), goldGraphics);
+
+            shell.clear();
+
+            GoldRunner gr = new GoldRunner(shell, goldGraphics);
             executorService = Executors.newSingleThreadExecutor();
             executorService.execute(gr);
 
-            KeyboardInput ki = new KeyboardInput(commandInvocation, gr, executorService);
-            ki.processInput();
-        } else {
-            goldGraphics.drawScoreScreen(commandInvocation.getShell());
-            
-            Thread.sleep(5000);
-            
-            goldGraphics.cleanup();
-            commandInvocation.getShell().clear();
-            commandInvocation.getShell().out().print(ANSI.restoreCursor());
-            commandInvocation.getShell().out().print(ANSI.showCursor());
-            commandInvocation.getShell().enableMainBuffer();
-            commandInvocation.getShell().out().flush();
+            KeyboardInput keyboard = new KeyboardInput(commandInvocation, gr, executorService);
+            keyboard.processInput();
         }
-        
-        goldGraphics.drawScoreScreen(commandInvocation.getShell());
+        else {
+            
+            shell.clear();
+            
+            goldGraphics.drawScoreScreen(shell);
+
+            Thread.sleep(2000);
+
+            goldGraphics.cleanup();
+            gameModeOff(shell);
+        }
+
+        goldGraphics.drawScoreScreen(shell);
         Thread.sleep(5000);
         goldGraphics.cleanup();
-        commandInvocation.getShell().clear();
-        commandInvocation.getShell().out().print(ANSI.restoreCursor());
-        commandInvocation.getShell().out().print(ANSI.showCursor());
-        commandInvocation.getShell().enableMainBuffer();
-        commandInvocation.getShell().out().flush();
-        
+        gameModeOff(shell);
+
         return CommandResult.SUCCESS;
+    }
+
+    private void gameModeOff(Shell shell) throws IOException {
+        shell.clear();
+        shell.out().print(ANSI.restoreCursor());
+        shell.out().print(ANSI.showCursor());
+        shell.enableMainBuffer();
+        shell.out().flush();
+    }
+
+    private void gameModeOn(Shell shell) throws IOException {
+        shell.clear();
+        shell.out().print(ANSI.saveCursor());
+        shell.out().print(ANSI.hideCursor());
+        shell.enableAlternateBuffer();
+        shell.out().flush();
     }
 
 }
