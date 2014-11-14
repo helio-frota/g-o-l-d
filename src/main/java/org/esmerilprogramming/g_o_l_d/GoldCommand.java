@@ -17,14 +17,12 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.esmerilprogramming.g_o_l_d.sounds.Sounds;
+import org.esmerilprogramming.g_o_l_d.core.GoldRunner;
+import org.esmerilprogramming.g_o_l_d.input.KeyboardInput;
 import org.jboss.aesh.cl.CommandDefinition;
 import org.jboss.aesh.console.command.Command;
-import org.jboss.aesh.console.command.CommandOperation;
 import org.jboss.aesh.console.command.CommandResult;
 import org.jboss.aesh.console.command.invocation.CommandInvocation;
-import org.jboss.aesh.terminal.Key;
-import org.jboss.aesh.terminal.Shell;
 import org.jboss.aesh.util.ANSI;
 
 /**
@@ -33,71 +31,24 @@ import org.jboss.aesh.util.ANSI;
 @CommandDefinition(name = "gold", description = "")
 public class GoldCommand implements Command<CommandInvocation> {
 
-    private CommandInvocation commandInvocation;
-    private Shell shell;
-    private ExecutorService executorService;
-    private GoldRunner runner;
-
+    public static ExecutorService executorService;
+    
     @Override
     public CommandResult execute(CommandInvocation commandInvocation) throws IOException, InterruptedException {
+        
+        commandInvocation.getShell().out().print(ANSI.saveCursor());
+        commandInvocation.getShell().out().print(ANSI.hideCursor());
+        commandInvocation.getShell().enableAlternateBuffer();
+        commandInvocation.getShell().out().flush();
 
-        this.commandInvocation = commandInvocation;
-        shell = this.commandInvocation.getShell();
-        shell.out().print(ANSI.saveCursor());
-        shell.out().print(ANSI.hideCursor());
-        shell.enableAlternateBuffer();
-        shell.out().flush();
-
-        startGame(shell);
-        processInput();
-
-        return CommandResult.SUCCESS;
-    }
-
-    private void startGame(Shell shell) {
-        runner = new GoldRunner(shell);
+        GoldRunner gr = new GoldRunner(commandInvocation.getShell());
         executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(runner);
-        Sounds.playMusic();
-    }
-
-    public void processInput() throws IOException, InterruptedException {
-        try {
-            while (true) {
-                CommandOperation commandOperation = commandInvocation.getInput();
-                if (commandOperation.getInputKey() == Key.UP) {
-                    runner.moveUp();
-                }
-                else if (commandOperation.getInputKey() == Key.DOWN) {
-                    runner.moveDown();
-                }
-                else if (commandOperation.getInputKey() == Key.LEFT) {
-                    runner.moveLeft();
-                }
-                else if (commandOperation.getInputKey() == Key.RIGHT) {
-                    runner.moveRight();
-                }
-                else if (commandOperation.getInputKey() == Key.ESC || commandOperation.getInputKey() == Key.q) {
-                    stop();
-                }
-            }
-        }
-        catch (InterruptedException e) {
-            throw e;
-        }
-    }
-
-    private void stop() throws IOException {
-        runner.cleanup();
-        if (executorService != null) {
-            executorService.shutdown();
-        }
-
-        shell.clear();
-        shell.out().print(ANSI.restoreCursor());
-        shell.out().print(ANSI.showCursor());
-        shell.enableMainBuffer();
-        shell.out().flush();
+        executorService.execute(gr);
+        
+        KeyboardInput ki = new KeyboardInput(commandInvocation, gr, executorService);
+        ki.processInput();
+        
+        return CommandResult.SUCCESS;
     }
 
 }

@@ -25,6 +25,11 @@ public class Player {
     
     private int score;
     private int steps;
+    
+    public Player(int x, int y) {
+        this.positionX = x;
+        this.positionY = y;
+    }
 
     public int increaseScore() {
         return ++score;
@@ -38,16 +43,8 @@ public class Player {
         return positionX;
     }
 
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
     public int getPositionY() {
         return positionY;
-    }
-
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
     }
     
     public int decreasePositionX() {

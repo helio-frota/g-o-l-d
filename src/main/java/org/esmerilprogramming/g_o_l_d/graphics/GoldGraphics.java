@@ -74,12 +74,22 @@ public class GoldGraphics {
         graphics.drawString(" ", player.getPositionX(), pathClear);
         graphics.drawString("" + player.increaseSteps(), 19, 1);
     }
-    
+
     public void drawMoveUp(Player player) {
         int pathClear = player.getPositionY();
         graphics.drawString(Player.CHARACTER, player.getPositionX(), player.decreasePositionY());
         graphics.drawString(" ", player.getPositionX(), pathClear);
         graphics.drawString("" + player.increaseSteps(), 19, 1);
+    }
+
+    public void drawTimeLeft(int timeLeft, int position) {
+        graphics.setColor(WORLD_COLOR);
+        if (timeLeft >= 10) {
+            graphics.drawString("" + timeLeft, position - 2, 1);
+        }
+        else {
+            graphics.drawString(" " + timeLeft, position - 2, 1);
+        }
     }
 
     public void repaintGold(Gold g) {
