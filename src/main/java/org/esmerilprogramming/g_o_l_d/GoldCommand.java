@@ -71,13 +71,15 @@ public class GoldCommand implements Command<CommandInvocation> {
 
             goldGraphics.cleanup();
             gameModeOff(shell);
+            commandInvocation.stop();
         }
 
         goldGraphics.drawScoreScreen(shell);
         Thread.sleep(5000);
         goldGraphics.cleanup();
         gameModeOff(shell);
-
+        commandInvocation.stop();
+        
         return CommandResult.SUCCESS;
     }
 
