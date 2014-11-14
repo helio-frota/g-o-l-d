@@ -30,15 +30,15 @@ public class GoldRunner implements Runnable {
 
     private Gold g1 = new Gold(14, 8);
     private Gold g2 = new Gold(66, 8);
-    private Gold g3 = new Gold(14, 28);
+    private Gold g3 = new Gold(14, 18);
     private Gold g4 = new Gold(66, 18);
 
     private Player player;
 
     private Shell shell;
-    
+
     private GoldGraphics goldGraphics;
-    
+
     private int lastGoldItem;
 
     public GoldRunner(Shell shell) {
@@ -47,15 +47,15 @@ public class GoldRunner implements Runnable {
         GraphicsConfiguration gc = new AeshGraphicsConfiguration(this.shell);
         goldGraphics = new GoldGraphics(gc.getGraphics());
         goldGraphics.drawWorld(shell.getSize().getWidth(), shell.getSize().getHeight());
-        
+
         randomGold();
-        
+
         player = new Player();
-        player.setPositionX(shell.getSize().getWidth() / 2 - 2);
+        player.setPositionX((shell.getSize().getWidth() / 2) - 2);
         player.setPositionY(shell.getSize().getHeight() / 2);
-        
+
         goldGraphics.drawPlayer(player);
-        
+
         new Thread(new Timer(goldGraphics.getGraphics(), shell.getSize().getWidth())).start();
     }
 
@@ -66,8 +66,7 @@ public class GoldRunner implements Runnable {
 
     private void randomGold() {
 
-        Random rand = new Random();
-        int raffle = rand.nextInt(4) + 1;
+        int raffle = new Random().nextInt(4) + 1;
         if (raffle == 1 && raffle != lastGoldItem) {
             goldGraphics.repaintGold(g1);
             lastGoldItem = 1;
@@ -113,52 +112,36 @@ public class GoldRunner implements Runnable {
         }
     }
 
-    private void countMove() {
-        goldGraphics.getGraphics().drawString("" + player.increaseSteps(), 19, 1);
-    }
-
     public void moveUp() throws InterruptedException {
         if (player.getPositionY() != 3) {
-            int pathClear = player.getPositionY();
-            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.getPositionX(), player.decreasePositionY());
-            goldGraphics.getGraphics().drawString(" ", player.getPositionX(), pathClear);
-            countMove();
+            goldGraphics.drawMoveUp(player);
             checkGetGold();
         }
     }
 
     public void moveDown() throws InterruptedException {
         if (player.getPositionY() != 23) {
-            int pathClear = player.getPositionY();
-            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.getPositionX(), player.increasePositionY());
-            goldGraphics.getGraphics().drawString(" ", player.getPositionX(), pathClear);
-            countMove();
+            goldGraphics.drawMoveDown(player);
             checkGetGold();
         }
     }
 
     public void moveLeft() throws InterruptedException {
         if (player.getPositionX() != 2) {
-            int pathClear = player.getPositionX();
-            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.decreasePositionX(), player.getPositionY());
-            goldGraphics.getGraphics().drawString(" ", pathClear, player.getPositionY());
-            countMove();
+            goldGraphics.drawMoveLeft(player);
             checkGetGold();
         }
     }
 
     public void moveRight() throws InterruptedException {
         if (player.getPositionX() != 79) {
-            int pathClear = player.getPositionX();
-            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.increasePositionX(), player.getPositionY());
-            goldGraphics.getGraphics().drawString(" ", pathClear, player.getPositionY());
-            countMove();
+            goldGraphics.drawMoveRight(player);
             checkGetGold();
         }
     }
 
     public void cleanup() {
-        goldGraphics.getGraphics().cleanup();
+        goldGraphics.cleanup();
     }
 
 }
