@@ -17,9 +17,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
+import org.esmerilprogramming.g_o_l_d.sounds.Sounds;
 import org.jboss.aesh.cl.CommandDefinition;
 import org.jboss.aesh.console.command.Command;
 import org.jboss.aesh.console.command.CommandOperation;
@@ -60,7 +58,7 @@ public class GoldCommand implements Command<CommandInvocation> {
         runner = new GoldRunner(shell);
         executorService = Executors.newSingleThreadExecutor();
         executorService.execute(runner);
-        playMetal();
+        Sounds.playMusic();
     }
 
     public void processInput() throws IOException, InterruptedException {
@@ -100,18 +98,6 @@ public class GoldCommand implements Command<CommandInvocation> {
         shell.out().print(ANSI.showCursor());
         shell.enableMainBuffer();
         shell.out().flush();
-    }
-
-    private void playMetal() {
-        try {
-            Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("173248__zagi2__heavy-loop.wav")));
-            clip.start();
-            clip.loop(3);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

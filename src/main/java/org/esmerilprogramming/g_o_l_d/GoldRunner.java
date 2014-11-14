@@ -15,17 +15,13 @@ package org.esmerilprogramming.g_o_l_d;
 
 import java.util.Random;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
+import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
+import org.esmerilprogramming.g_o_l_d.sounds.Sounds;
 import org.esmerilprogramming.g_o_l_d.sprite.Gold;
 import org.esmerilprogramming.g_o_l_d.sprite.Player;
 import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
-import org.jboss.aesh.graphics.Graphics;
 import org.jboss.aesh.graphics.GraphicsConfiguration;
-import org.jboss.aesh.terminal.Color;
 import org.jboss.aesh.terminal.Shell;
-import org.jboss.aesh.terminal.TerminalColor;
 
 /**
  * @author <a href="mailto:00hf11@gmail.com">Helio Frota</a>
@@ -37,39 +33,30 @@ public class GoldRunner implements Runnable {
     private Gold g3 = new Gold(14, 28);
     private Gold g4 = new Gold(66, 18);
 
-    private int maxX;
-    private int maxY;
-
     private Player player;
 
     private Shell shell;
-    private Graphics graphics;
-
-    private int spriteX;
-    private int spriteY;
-
+    
+    private GoldGraphics goldGraphics;
+    
     private int lastGoldItem;
-
-    static final TerminalColor WORLD_COLOR = new TerminalColor(Color.BLUE, Color.DEFAULT);
-    private TerminalColor goldColor;
-
-    private static final String SPRITE = "X";
 
     public GoldRunner(Shell shell) {
         this.shell = shell;
 
-        goldColor = new TerminalColor(Color.DEFAULT, Color.YELLOW);
-
         GraphicsConfiguration gc = new AeshGraphicsConfiguration(this.shell);
-        graphics = gc.getGraphics();
-        graphics.setColor(WORLD_COLOR);
-
-        maxX = shell.getSize().getWidth();
-        maxY = shell.getSize().getHeight();
-
+        goldGraphics = new GoldGraphics(gc.getGraphics());
+        goldGraphics.drawWorld(shell.getSize().getWidth(), shell.getSize().getHeight());
+        
+        randomGold();
+        
         player = new Player();
-        drawWorld();
-        new Thread(new Timer(graphics, maxX)).start();
+        player.setPositionX(shell.getSize().getWidth() / 2 - 2);
+        player.setPositionY(shell.getSize().getHeight() / 2);
+        
+        goldGraphics.drawPlayer(player);
+        
+        new Thread(new Timer(goldGraphics.getGraphics(), shell.getSize().getWidth())).start();
     }
 
     @Override
@@ -77,33 +64,25 @@ public class GoldRunner implements Runnable {
 
     }
 
-    public void drawWorld() {
-        graphics.drawString("SCORE:", 0, 1);
-        graphics.drawString("STEPS:", 13, 1);
-        graphics.drawString("TIME REMAINING:", maxX - 17, 1);
-        graphics.drawLine(0, 2, maxX, 2);
-        drawPlaces();
-        randomGold();
-        spriteX = maxX / 2 - 2;
-        spriteY = maxY / 2;
-        graphics.drawString(SPRITE, spriteX, spriteY);
-    }
-
     private void randomGold() {
 
         Random rand = new Random();
         int raffle = rand.nextInt(4) + 1;
         if (raffle == 1 && raffle != lastGoldItem) {
-            applyRaffle(g1, 1);
+            goldGraphics.repaintGold(g1);
+            lastGoldItem = 1;
         }
         else if (raffle == 2 && raffle != lastGoldItem) {
-            applyRaffle(g2, 2);
+            goldGraphics.repaintGold(g2);
+            lastGoldItem = 2;
         }
         else if (raffle == 3 && raffle != lastGoldItem) {
-            applyRaffle(g3, 3);
+            goldGraphics.repaintGold(g3);
+            lastGoldItem = 3;
         }
         else if (raffle == 4 && raffle != lastGoldItem) {
-            applyRaffle(g4, 4);
+            goldGraphics.repaintGold(g4);
+            lastGoldItem = 4;
         }
         else {
             randomGold();
@@ -126,85 +105,60 @@ public class GoldRunner implements Runnable {
             currentGold = g4;
         }
 
-        if (spriteX == currentGold.getX() && spriteY == currentGold.getY()) {
-            graphics.drawString("" + player.increaseScore(), 7, 1);
-            playGold();
-            drawPlaces();
+        if (player.getPositionX() == currentGold.getX() && player.getPositionY() == currentGold.getY()) {
+            goldGraphics.getGraphics().drawString("" + player.increaseScore(), 7, 1);
+            Sounds.playSound();
+            goldGraphics.drawGoldPlaces();
             randomGold();
         }
     }
 
-    private void playGold() {
-        try {
-            Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(this.getClass().getResourceAsStream("209578__zott820__cash-register-purchase.wav")));
-            clip.start();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void applyRaffle(Gold g, int lastGoldItemValue) {
-        graphics.setColor(goldColor);
-        graphics.fillRect(g.getX(), g.getY(), Gold.WIDTH, Gold.HEIGHT);
-        lastGoldItem = lastGoldItemValue;
-        graphics.setColor(WORLD_COLOR);
-    }
-
-    private void drawPlaces() {
-        graphics.drawRect(8, 5, 14, 5);
-        graphics.drawRect(60, 5, 14, 5);
-        graphics.drawRect(8, 15, 14, 5);
-        graphics.drawRect(60, 15, 14, 5);
-    }
-
     private void countMove() {
-        graphics.drawString("" + player.increaseSteps(), 19, 1);
+        goldGraphics.getGraphics().drawString("" + player.increaseSteps(), 19, 1);
     }
 
     public void moveUp() throws InterruptedException {
-        if (spriteY != 3) {
-            int pathClear = spriteY;
-            graphics.drawString(SPRITE, spriteX, --spriteY);
-            graphics.drawString(" ", spriteX, pathClear);
+        if (player.getPositionY() != 3) {
+            int pathClear = player.getPositionY();
+            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.getPositionX(), player.decreasePositionY());
+            goldGraphics.getGraphics().drawString(" ", player.getPositionX(), pathClear);
             countMove();
             checkGetGold();
         }
     }
 
     public void moveDown() throws InterruptedException {
-        if (spriteY != 23) {
-            int pathClear = spriteY;
-            graphics.drawString(SPRITE, spriteX, ++spriteY);
-            graphics.drawString(" ", spriteX, pathClear);
+        if (player.getPositionY() != 23) {
+            int pathClear = player.getPositionY();
+            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.getPositionX(), player.increasePositionY());
+            goldGraphics.getGraphics().drawString(" ", player.getPositionX(), pathClear);
             countMove();
             checkGetGold();
         }
     }
 
     public void moveLeft() throws InterruptedException {
-        if (spriteX != 2) {
-            int pathClear = spriteX;
-            graphics.drawString(SPRITE, --spriteX, spriteY);
-            graphics.drawString(" ", pathClear, spriteY);
+        if (player.getPositionX() != 2) {
+            int pathClear = player.getPositionX();
+            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.decreasePositionX(), player.getPositionY());
+            goldGraphics.getGraphics().drawString(" ", pathClear, player.getPositionY());
             countMove();
             checkGetGold();
         }
     }
 
     public void moveRight() throws InterruptedException {
-        if (spriteX != 79) {
-            int pathClear = spriteX;
-            graphics.drawString(SPRITE, ++spriteX, spriteY);
-            graphics.drawString(" ", pathClear, spriteY);
+        if (player.getPositionX() != 79) {
+            int pathClear = player.getPositionX();
+            goldGraphics.getGraphics().drawString(Player.CHARACTER, player.increasePositionX(), player.getPositionY());
+            goldGraphics.getGraphics().drawString(" ", pathClear, player.getPositionY());
             countMove();
             checkGetGold();
         }
     }
 
     public void cleanup() {
-        graphics.cleanup();
+        goldGraphics.getGraphics().cleanup();
     }
 
 }
