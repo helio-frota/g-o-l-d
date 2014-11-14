@@ -4,10 +4,13 @@ apply plugin: "eclipse"
 apply plugin: "maven"
 apply plugin: "application"
 
+
+
 group = "org.esmerilprogramming"
 version = "0.1"
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
+run.standardInput = System.in
 
 jar {
     manifest {
