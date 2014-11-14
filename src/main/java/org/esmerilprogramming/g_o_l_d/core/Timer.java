@@ -21,7 +21,7 @@ import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
 public class Timer implements Runnable {
 
     private int maxX;
-    private int timer = 30;
+    public static int timer = 30;
     private GoldGraphics goldGraphics;
 
     public Timer(GoldGraphics goldGraphics, int maxX) {
@@ -31,7 +31,7 @@ public class Timer implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (timer != 0) {
             if (timer >= 0) {
                 goldGraphics.drawTimeLeft(timer--, maxX);
                 pause();

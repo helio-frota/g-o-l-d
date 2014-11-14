@@ -50,7 +50,7 @@ public class GoldGraphics {
         graphics.drawString("STEPS:", 13, 1);
         graphics.drawString("TIME REMAINING:", screenWidth - 17, 1);
         graphics.drawLine(0, 2, screenWidth, 2);
-
+        graphics.drawLine(0, screenHeight - 1, screenWidth, screenHeight - 1);
         drawGoldPlaces();
     }
 

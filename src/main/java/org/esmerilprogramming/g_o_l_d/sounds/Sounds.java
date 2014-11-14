@@ -28,8 +28,9 @@ public class Sounds {
     private static final String MUSIC = "173248__zagi2__heavy-loop.wav";
     private static final String SOUND = "209578__zott820__cash-register-purchase.wav";
 
+    private static Clip music = null;
+    
     public static void playMusic() {
-        Clip music = null;
         try {
             music = AudioSystem.getClip();
             music.open(AudioSystem.getAudioInputStream(Sounds.class.getResourceAsStream(MUSIC)));
@@ -51,6 +52,10 @@ public class Sounds {
             e.printStackTrace();
         }
         sound.start();
+    }
+    
+    public static void stopMusic() {
+        music.stop();
     }
 
 }
