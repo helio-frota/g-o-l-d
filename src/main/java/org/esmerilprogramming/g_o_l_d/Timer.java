@@ -13,6 +13,7 @@
  */
 package org.esmerilprogramming.g_o_l_d;
 
+import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
 import org.jboss.aesh.graphics.Graphics;
 
 /**
@@ -34,11 +35,11 @@ public class Timer implements Runnable {
         while (true) {
             if (timer > 0) {
                 if (timer >= 10) {
-                    graphics.setColor(GoldRunner.WORLD_COLOR);
+                    graphics.setColor(GoldGraphics.WORLD_COLOR);
                     graphics.drawString("" + timer--, maxX - 2, 1);
                 }
                 else {
-                    graphics.setColor(GoldRunner.WORLD_COLOR);
+                    graphics.setColor(GoldGraphics.WORLD_COLOR);
                     graphics.drawString(" " + timer--, maxX - 2, 1);
                 }
                 pause();
