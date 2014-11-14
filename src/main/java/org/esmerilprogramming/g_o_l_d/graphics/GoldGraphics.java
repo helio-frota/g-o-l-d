@@ -17,6 +17,7 @@ import org.esmerilprogramming.g_o_l_d.sprite.Gold;
 import org.esmerilprogramming.g_o_l_d.sprite.Player;
 import org.jboss.aesh.graphics.Graphics;
 import org.jboss.aesh.terminal.Color;
+import org.jboss.aesh.terminal.Shell;
 import org.jboss.aesh.terminal.TerminalColor;
 
 /**
@@ -33,6 +34,16 @@ public class GoldGraphics {
         this.graphics = graphics;
     }
 
+    public void drawReadyScreen(Shell shell) {
+        graphics.setColor(WORLD_COLOR);
+        graphics.drawString("Ready ? (y/n)", (shell.getSize().getWidth() / 2) - 2, shell.getSize().getHeight() / 2);
+    }
+    
+    public void drawScoreScreen(Shell shell) {
+        graphics.setColor(WORLD_COLOR);
+        graphics.drawString("Best Score: 9999999999", (shell.getSize().getWidth() / 2) - 2, shell.getSize().getHeight() / 2);
+    }
+    
     public void drawWorld(int screenWidth, int screenHeight) {
         graphics.setColor(WORLD_COLOR);
         graphics.drawString("SCORE:", 0, 1);

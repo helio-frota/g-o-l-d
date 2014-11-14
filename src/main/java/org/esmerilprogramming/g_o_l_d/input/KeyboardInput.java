@@ -54,11 +54,11 @@ public class KeyboardInput {
                 else if (commandOperation.getInputKey() == Key.ESC || 
                     commandOperation.getInputKey() == Key.q ||
                     commandOperation.getInputKey() == Key.CTRL_C) {
-                    runner.stop(executorService);
+                    runner.gameOver(executorService);
                 }
             }
             
-            runner.stop(executorService);
+            runner.gameOver(executorService);
             
         }
         catch (Exception e) {
