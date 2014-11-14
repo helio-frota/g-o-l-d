@@ -11,9 +11,12 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.esmerilprogramming.g_o_l_d;
+package org.esmerilprogramming.g_o_l_d.core;
 
+import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
 import org.esmerilprogramming.g_o_l_d.sounds.Sounds;
@@ -22,12 +25,15 @@ import org.esmerilprogramming.g_o_l_d.sprite.Player;
 import org.jboss.aesh.graphics.AeshGraphicsConfiguration;
 import org.jboss.aesh.graphics.GraphicsConfiguration;
 import org.jboss.aesh.terminal.Shell;
+import org.jboss.aesh.util.ANSI;
 
 /**
  * @author <a href="mailto:00hf11@gmail.com">Helio Frota</a>
  */
 public class GoldRunner implements Runnable {
 
+    private ExecutorService timerService;
+    
     private Gold g1 = new Gold(14, 8);
     private Gold g2 = new Gold(66, 8);
     private Gold g3 = new Gold(14, 18);
@@ -41,6 +47,8 @@ public class GoldRunner implements Runnable {
 
     private int lastGoldItem;
 
+    public static boolean running = true;
+
     public GoldRunner(Shell shell) {
         this.shell = shell;
 
@@ -50,13 +58,14 @@ public class GoldRunner implements Runnable {
 
         randomGold();
 
-        player = new Player();
-        player.setPositionX((shell.getSize().getWidth() / 2) - 2);
-        player.setPositionY(shell.getSize().getHeight() / 2);
+        player = new Player((shell.getSize().getWidth() / 2) - 2, shell.getSize().getHeight() / 2);
 
         goldGraphics.drawPlayer(player);
 
-        new Thread(new Timer(goldGraphics.getGraphics(), shell.getSize().getWidth())).start();
+        Sounds.playMusic();
+
+        timerService = Executors.newSingleThreadExecutor();
+        timerService.execute(new Timer(goldGraphics, shell.getSize().getWidth()));
     }
 
     @Override
@@ -140,8 +149,23 @@ public class GoldRunner implements Runnable {
         }
     }
 
-    public void cleanup() {
+    public void stop(ExecutorService executorService) throws IOException {
+        
+        if (this.timerService != null) {
+            this.timerService.shutdown();
+        }
+        
         goldGraphics.cleanup();
+        shell.clear();
+        shell.out().print(ANSI.restoreCursor());
+        shell.out().print(ANSI.showCursor());
+        shell.enableMainBuffer();
+        shell.out().flush();
+
+        if (executorService != null) {
+            executorService.shutdown();
+        }
+
     }
 
 }

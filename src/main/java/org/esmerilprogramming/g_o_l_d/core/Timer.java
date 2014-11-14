@@ -11,10 +11,9 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.esmerilprogramming.g_o_l_d;
+package org.esmerilprogramming.g_o_l_d.core;
 
 import org.esmerilprogramming.g_o_l_d.graphics.GoldGraphics;
-import org.jboss.aesh.graphics.Graphics;
 
 /**
  * @author <a href="mailto:00hf11@gmail.com">Helio Frota</a>
@@ -23,30 +22,27 @@ public class Timer implements Runnable {
 
     private int maxX;
     private int timer = 30;
-    private Graphics graphics;
+    private GoldGraphics goldGraphics;
 
-    public Timer(Graphics graphics, int maxX) {
-        this.graphics = graphics;
+    public Timer(GoldGraphics goldGraphics, int maxX) {
+        this.goldGraphics = goldGraphics;
         this.maxX = maxX;
     }
 
     @Override
     public void run() {
         while (true) {
-            if (timer > 0) {
-                if (timer >= 10) {
-                    graphics.setColor(GoldGraphics.WORLD_COLOR);
-                    graphics.drawString("" + timer--, maxX - 2, 1);
-                }
-                else {
-                    graphics.setColor(GoldGraphics.WORLD_COLOR);
-                    graphics.drawString(" " + timer--, maxX - 2, 1);
-                }
+            if (timer >= 0) {
+                goldGraphics.drawTimeLeft(timer--, maxX);
                 pause();
-            } else {
+            }
+            else {
                 break;
             }
         }
+
+        GoldRunner.running = false;
+
     }
 
     private void pause() {
